@@ -65,35 +65,30 @@
             border-color: transparent;
         }
 
-        /* Horizontal Slider Container - Diperbarui ke sistem Native Scroll */
+        /* Horizontal Slider Container - Transform Method for All Devices */
         #slider-container {
             display: flex;
-            width: 100vw;
-            height: 100vh;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            /* Menyembunyikan scrollbar bawaan */
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-        #slider-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+            width: 600vw;
+            height: 100dvh; /* Mengikuti tinggi viewport aktual device */
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            will-change: transform;
         }
 
         .slide {
             width: 100vw;
-            height: 100vh;
+            height: 100dvh;
             position: relative;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 6rem 1.5rem 6rem 1.5rem; /* Ruang agar tidak tertutup header/footer */
             box-sizing: border-box;
-            scroll-snap-align: start; /* Mengunci layar saat digeser */
+            overflow-y: auto; /* Bisa di-scroll ke bawah jika konten terlalu panjang di HP */
+            overflow-x: hidden;
+            touch-action: pan-y; /* Penting: izinkan scroll atas-bawah, swipe kiri-kanan ditangani JS */
         }
+        .slide::-webkit-scrollbar { display: none; } /* Sembunyikan scrollbar di dalam slide */
 
         /* Abstract Background Canvas */
         #bg-canvas {
@@ -260,9 +255,9 @@
                     </div>
                 </div>
 
-                <div class="md:w-1/2 flex justify-center md:justify-end reveal-up" style="transition-delay: 0.6s;">
-                    <!-- Profil Image -->
-                    <div class="relative w-64 h-64 md:w-80 md:h-80 group hover-target rounded-full p-2 border border-gray-800 hover:border-acid transition-colors duration-500 shadow-[0_0_0_rgba(212,255,0,0)] hover:shadow-[0_0_30px_rgba(212,255,0,0.15)]">
+                <div class="md:w-1/2 flex justify-center md:justify-end reveal-up mt-10 md:mt-0" style="transition-delay: 0.6s;">
+                    <!-- Profil Image Responsive (Mengecil di HP, membesar di Tablet/PC) -->
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 group hover-target rounded-full p-2 border border-gray-800 hover:border-acid transition-colors duration-500 shadow-[0_0_0_rgba(212,255,0,0)] hover:shadow-[0_0_30px_rgba(212,255,0,0.15)] mx-auto md:mx-0">
                         
                         <div class="w-full h-full bg-surface overflow-hidden relative rounded-full">
                             <div class="absolute inset-0 bg-acid/10 mix-blend-overlay z-10 group-hover:bg-transparent transition-colors duration-700"></div>
@@ -391,5 +386,4 @@
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Endless</li>
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Portaldot</li>
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> AIX ledger</li>
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Deepsafe</li>
-                       
+                                <li
