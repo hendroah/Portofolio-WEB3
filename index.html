@@ -1,5 +1,4 @@
 ```html
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -67,13 +66,21 @@
             border-color: transparent;
         }
 
-        /* Horizontal Slider Container */
+        /* Horizontal Slider Container - Diperbarui ke sistem Native Scroll */
         #slider-container {
             display: flex;
-            width: 600vw; /* 6 sections = 600% width */
+            width: 100vw;
             height: 100vh;
-            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
-            will-change: transform;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            /* Menyembunyikan scrollbar bawaan */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        #slider-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
         }
 
         .slide {
@@ -86,6 +93,7 @@
             justify-content: center;
             padding: 2rem;
             box-sizing: border-box;
+            scroll-snap-align: start; /* Mengunci layar saat digeser */
         }
 
         /* Abstract Background Canvas */
@@ -385,11 +393,4 @@
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Portaldot</li>
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> AIX ledger</li>
                                 <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Deepsafe</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Group 3: Research -->
-                    <div class="space-y-8">
-                        <div class="border-t border-gray-800 pt-4 hover-target group h-full">
-                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="RESEARCH">RESEAR
+                       
