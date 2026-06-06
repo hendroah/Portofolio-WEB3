@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -211,6 +212,25 @@
             );
             border: 1px solid rgba(255, 42, 75, 0.3);
         }
+
+        /* Responsive Media Queries */
+        @media (max-width: 767px) { 
+            .glitch { font-size: 0.9em; } 
+            .crt-overlay { background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 100%); }
+            button, a { min-height: 44px; display: inline-flex; align-items: center; }
+            .nav-link { justify-content: flex-start; width: 100%; padding: 10px 0; }
+            .window-content { padding-bottom: 2rem; }
+            /* Stacked layout enforced */
+            .flex-col-mobile { flex-direction: column; }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) { 
+            /* Tablet Adjustments */
+            .window-content { padding: 1.5rem; }
+        }
+        @media (min-width: 1024px) { 
+            /* Desktop Adjustments */
+            .window-content { padding: 2rem; }
+        }
     </style>
 </head>
 <body class="text-xs sm:text-sm">
@@ -221,12 +241,16 @@
     <div class="crt-overlay"></div>
 
     <!-- Main Interface Container -->
-    <div class="relative z-10 flex flex-col h-screen w-full p-2 sm:p-6">
+    <div class="relative z-10 flex flex-col h-screen w-full p-2 sm:p-4 md:p-6 overflow-hidden">
         
         <!-- Top HUD Bar -->
-        <header class="flex justify-between items-center w-full mb-6 neon-border bg-cyber-panel p-3">
-            <div class="flex items-center gap-4">
-                <h1 class="font-display font-bold text-xl sm:text-2xl tracking-widest text-white glitch" data-text="0xPORTFOLIO">0xPORTFOLIO</h1>
+        <header class="flex justify-between items-center w-full mb-4 md:mb-6 neon-border bg-cyber-panel p-3 relative z-30">
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="mobile-menu-btn" class="md:hidden text-cyber-cyan hover:text-white focus:outline-none p-2 rounded hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h1 class="font-display font-bold text-lg sm:text-xl md:text-2xl tracking-widest text-white glitch" data-text="0xPORTFOLIO">0xPORTFOLIO</h1>
                 <span class="hidden sm:inline-block text-[10px] text-cyber-red border border-cyber-red px-2 py-1 uppercase animate-pulse">Pride</span>
             </div>
             
@@ -244,10 +268,22 @@
         </header>
 
         <!-- Main Layout Flex -->
-        <div class="flex flex-1 gap-6 overflow-hidden flex-col md:flex-row">
+        <div class="flex flex-1 gap-4 md:gap-6 overflow-hidden relative">
             
+            <!-- Mobile Overlay Background -->
+            <div id="mobile-overlay" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
             <!-- Left Sidebar (Navigation & Identity) -->
-            <aside class="w-full md:w-64 flex flex-col gap-6 shrink-0">
+            <aside id="sidebar" class="fixed md:relative z-50 md:z-auto top-0 left-0 h-full md:h-auto w-[85%] sm:w-80 md:w-64 bg-[#050505] md:bg-transparent transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col gap-6 shrink-0 overflow-y-auto border-r border-cyber-cyan/30 md:border-none p-6 md:p-0 shadow-[4px_0_15px_rgba(0,0,0,0.8)] md:shadow-none">
+                
+                <!-- Mobile Close Button -->
+                <div class="flex md:hidden justify-between items-center mb-2 border-b border-gray-800 pb-4">
+                    <span class="text-cyber-cyan font-mono text-xs">/// OS_NAVIGATION</span>
+                    <button id="close-menu-btn" class="text-gray-400 hover:text-cyber-red focus:outline-none p-2 rounded transition-colors">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+
                 <!-- Profile Block -->
                 <div class="neon-border bg-cyber-panel p-4 relative">
                     <div class="absolute top-0 right-0 p-1 text-[8px] text-cyber-red border-b border-l border-cyber-red">ID: 9948</div>
@@ -277,7 +313,7 @@
                 <!-- Navigation Menu -->
                 <nav class="neon-border bg-cyber-panel p-4 flex-1 flex flex-col">
                     <div class="text-[10px] text-gray-500 mb-4 border-b border-gray-800 pb-1">/// DIRECTORY_ACCESS</div>
-                    <ul class="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible pb-2 md:pb-0" id="nav-menu">
+                    <ul class="flex flex-col gap-2 md:gap-4 pb-2 md:pb-0" id="nav-menu">
                         <li><button type="button" class="nav-link active uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="home"><i class="fa-solid fa-terminal mr-2"></i>Terminal</button></li>
                         <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="art"><i class="fa-solid fa-palette mr-2"></i>Art</button></li>
                         <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="research"><i class="fa-solid fa-microscope mr-2"></i>Research</button></li>
@@ -330,7 +366,7 @@
                         <h2 class="text-2xl font-display text-cyber-cyan mb-6 flex items-center border-b border-gray-800 pb-2">
                             <i class="fa-solid fa-palette mr-3"></i> DIGITAL_ART_GALLERY
                         </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             <a href="https://github.com/hendroah" target="_blank" class="group relative overflow-hidden neon-border cursor-pointer block">
                                 <div class="h-48 image-placeholder flex flex-col justify-center items-center text-cyber-red opacity-60 group-hover:opacity-100 transition-opacity">
                                     <i class="fa-solid fa-vr-cardboard text-4xl mb-2"></i>
@@ -351,29 +387,4 @@
                                     <p class="text-[10px] text-gray-400">Generative AI + TouchDesigner</p>
                                 </div>
                             </a>
-                            <a href="https://github.com/hendroah" target="_blank" class="group relative overflow-hidden neon-border cursor-pointer block">
-                                <div class="h-48 image-placeholder flex flex-col justify-center items-center text-cyber-red opacity-60 group-hover:opacity-100 transition-opacity">
-                                    <i class="fa-brands fa-ethereum text-4xl mb-2"></i>
-                                    <span class="text-xs uppercase">NFT_Collection.zip</span>
-                                </div>
-                                <div class="p-3 bg-cyber-dark border-t border-gray-800 absolute bottom-0 w-full transform translate-y-full group-hover:translate-y-0 transition-transform">
-                                    <h3 class="text-cyber-cyan font-bold text-sm">Glitch Protocol</h3>
-                                    <p class="text-[10px] text-gray-400">ERC-721 Collection</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- 3. RESEARCH -->
-                    <div id="research" class="window-content">
-                        <h2 class="text-2xl font-display text-cyber-cyan mb-6 flex items-center border-b border-gray-800 pb-2">
-                            <i class="fa-solid fa-microscope mr-3"></i> ONCHAIN_RESEARCH_ARCHIVE
-                        </h2>
-                        <div class="flex flex-col gap-4">
-                            <div class="border-l-2 border-cyber-cyan bg-cyber-dark p-4 hover:bg-gray-900 transition-colors">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-white font-bold text-lg">Research Content #1</h3>
-                                    <span class="text-[10px] border border-gray-700 px-2 py-1 text-gray-400">2026.06.06</span>
-                                </div>
-                                <p class="text-sm text-gray-400 mb-3">This is a placeholder for your research content. Please replace it with your research details, case studies, or on-chain analysis.</p>
-                                <a href="https://github.com/hendroah" target="_blank" class="text-cyber-cyan text-xs hover:te
+                            <a href="https://github.com/he
