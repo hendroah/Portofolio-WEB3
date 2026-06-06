@@ -1,0 +1,395 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HEND | Web3 Narrative Architect</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        display: ['"Syncopate"', 'sans-serif'],
+                    },
+                    colors: {
+                        bg: '#030303',
+                        acid: '#D4FF00', // Web3/Trading highly visible accent
+                        surface: '#111111'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Hide default scrollbars entirely */
+            background-color: #030303;
+            color: #ffffff;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Cursor */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D4FF00;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            mix-blend-mode: difference;
+        }
+        #custom-cursor.hovering {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(212, 255, 0, 0.2);
+            border-color: transparent;
+        }
+
+        /* Horizontal Slider Container */
+        #slider-container {
+            display: flex;
+            width: 600vw; /* 6 sections = 600% width */
+            height: 100vh;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+            will-change: transform;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        /* Abstract Background Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Navigation Dots */
+        .nav-dot {
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            height: 2rem;
+            background-color: #D4FF00;
+        }
+
+        /* Staggered Reveal Animations */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .slide.active .reveal-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glitch effect for main title */
+        .glitch-wrapper {
+            position: relative;
+        }
+        .glitch-text {
+            position: relative;
+            z-index: 2;
+        }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #030303;
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+            z-index: -1;
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 #D4FF00;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+            z-index: -2;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 83px, 0); }
+            20% { clip: rect(72px, 9999px, 14px, 0); }
+            40% { clip: rect(44px, 9999px, 98px, 0); }
+            60% { clip: rect(2px, 9999px, 32px, 0); }
+            80% { clip: rect(89px, 9999px, 65px, 0); }
+            100% { clip: rect(34px, 9999px, 12px, 0); }
+        }
+
+        /* Section Specific Styles */
+        .expertise-card {
+            border-left: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+        }
+        .expertise-card:hover {
+            border-left-color: #D4FF00;
+            background: linear-gradient(90deg, rgba(212,255,0,0.05) 0%, transparent 100%);
+            padding-left: 1.5rem;
+        }
+
+        /* Profile Image Animation */
+        @keyframes dim-bright {
+            0%, 100% { filter: brightness(1); opacity: 1; }
+            50% { filter: brightness(0.2); opacity: 0.7; }
+        }
+        .animate-dim-bright {
+            animation: dim-bright 3.5s infinite ease-in-out;
+            transition: filter 0.5s ease, opacity 0.5s ease;
+        }
+        .group:hover .animate-dim-bright {
+            animation: none;
+            filter: brightness(1.1);
+            opacity: 1;
+        }
+
+        /* Custom Scrollbar for Modal */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #D4FF00; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #custom-cursor { display: none; }
+            body, html { cursor: auto; }
+            .slide { align-items: flex-start; padding-top: 20vh; }
+        }
+    </style>
+</head>
+<body class="font-mono bg-bg text-white overflow-hidden selection:bg-acid selection:text-black">
+
+    <!-- Custom Cursor -->
+    <div id="custom-cursor" class="hidden md:block"></div>
+
+    <!-- Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full p-6 md:p-8 z-50 flex justify-between items-center pointer-events-none">
+        <div class="font-display font-bold text-xl tracking-widest text-acid pointer-events-auto hover-target cursor-pointer">
+            HEND
+        </div>
+    </header>
+
+    <!-- Fixed Progress Indicator -->
+    <div class="fixed bottom-8 left-8 z-50 flex gap-3 pointer-events-auto">
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full active" data-index="0"></button>
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="1"></button>
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="2"></button>
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="3"></button>
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="4"></button>
+        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="5"></button>
+    </div>
+
+    <!-- Scroll Hint -->
+    <div class="fixed bottom-8 right-8 z-50 flex items-center gap-4 text-xs tracking-widest text-gray-500 font-mono">
+        <span class="hidden md:inline">SCROLL TO NAVIGATE</span>
+        <span class="md:hidden">SWIPE TO NAVIGATE</span>
+        <i data-lucide="arrow-right" class="w-4 h-4 animate-pulse text-acid"></i>
+    </div>
+
+    <!-- Main Horizontal Slider -->
+    <main id="slider-container">
+        
+        <!-- SLIDE 1: INTRO -->
+        <section class="slide active" id="slide-0">
+            <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+                <div class="md:w-1/2 flex flex-col justify-center">
+                    <div class="reveal-up" style="transition-delay: 0.1s;">
+                        <p class="text-acid text-sm md:text-base tracking-[0.3em] mb-4 uppercase scramble" data-text="SYSTEM ARCHITECTURE // WEB3">INITIALIZING...</p>
+                    </div>
+                    
+                    <div class="glitch-wrapper reveal-up" style="transition-delay: 0.2s;">
+                        <h1 class="glitch-text font-display text-[15vw] md:text-[8vw] leading-none font-bold tracking-tighter" data-text="HEND">HEND</h1>
+                    </div>
+                    
+                    <div class="reveal-up mt-8 max-w-xl" style="transition-delay: 0.4s;">
+                        <p class="text-xl md:text-3xl font-light text-gray-400 scramble" data-text="The Narrative Architect.">Loading core identity...</p>
+                        <p class="mt-4 text-sm md:text-base text-gray-500 leading-relaxed scramble" data-text="Decoding the intersection of Digital Art, Market Liquidity, and Deep Research.">Syncing data streams...</p>
+                    </div>
+                </div>
+
+                <div class="md:w-1/2 flex justify-center md:justify-end reveal-up" style="transition-delay: 0.6s;">
+                    <!-- Profil Image -->
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 group hover-target rounded-full p-2 border border-gray-800 hover:border-acid transition-colors duration-500 shadow-[0_0_0_rgba(212,255,0,0)] hover:shadow-[0_0_30px_rgba(212,255,0,0.15)]">
+                        
+                        <div class="w-full h-full bg-surface overflow-hidden relative rounded-full">
+                            <div class="absolute inset-0 bg-acid/10 mix-blend-overlay z-10 group-hover:bg-transparent transition-colors duration-700"></div>
+                            <!-- Foto Profil GitHub Raw (Warna Asli) -->
+                            <img src="https://raw.githubusercontent.com/hendroah/Portofolio-WEB3/4ce1d8b3d776ed9a9261d5040f8cfee4780e09fc/IMG-20260602-WA0080.jpg" alt="Hend Profile" class="w-full h-full object-cover transition-all duration-700 transform group-hover:scale-105 animate-dim-bright" onerror="this.src='https://github.com/hendroah.png';">
+                        </div>
+                        
+                        <!-- Badge ID dipindah sedikit agar pas dengan bentuk lingkaran -->
+                        <div class="absolute bottom-2 right-2 md:bottom-6 md:right-0 bg-bg px-3 py-1 text-xs font-mono text-acid border border-gray-800 z-20 shadow-[4px_4px_0px_0px_rgba(212,255,0,0.2)] group-hover:-translate-y-1 transition-transform duration-300">
+                            ID: HEND_
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: THE THESIS -->
+        <section class="slide" id="slide-1">
+            <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/2 reveal-up">
+                    <h2 class="font-display text-4xl md:text-6xl font-bold mb-6 text-white uppercase"><span class="text-acid">/</span>/ Thesis</h2>
+                    <div class="h-[1px] w-full bg-gray-800 mb-8 relative">
+                        <div class="absolute top-0 left-0 h-full bg-acid w-0 transition-all duration-1000 ease-out" id="thesis-line"></div>
+                    </div>
+                    <p class="text-lg md:text-2xl text-gray-300 leading-relaxed font-light mb-6">
+                        "Estetika tanpa likuiditas adalah arsip mati. Likuiditas tanpa narasi budaya hanyalah kasino sementara."
+                    </p>
+                    <p class="text-sm text-gray-500 leading-relaxed font-mono">
+                        Kebanyakan orang di Web3 terjebak pada satu sisi. Saya berdiri di tengah. Menganalisis pasar melalui lensa budaya seni, dan membedah karya seni melalui metrik volume perdagangan.
+                    </p>
+                </div>
+                <div class="md:w-1/2 flex justify-center reveal-up" style="transition-delay: 0.2s;">
+                    <!-- Abstract geometric element -->
+                    <div class="w-64 h-64 md:w-96 md:h-96 border border-gray-800 relative flex items-center justify-center p-8 group hover-target">
+                        <div class="absolute inset-0 bg-acid opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+                        <div class="w-full h-full border border-acid/30 rotate-45 transition-transform duration-700 group-hover:rotate-90"></div>
+                        <div class="absolute w-1/2 h-1/2 border border-white/20 -rotate-12 transition-transform duration-700 group-hover:rotate-0"></div>
+                        <div class="absolute font-display font-bold text-acid text-xl tracking-widest text-center uppercase scramble" data-text="Proof of Work">???</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: EXPERTISE -->
+        <section class="slide" id="slide-2">
+            <div class="w-full max-w-7xl mx-auto flex flex-col justify-center h-full">
+                <h2 class="font-display text-3xl md:text-5xl font-bold mb-12 text-white reveal-up uppercase"><span class="text-acid">/</span>/ CORE PROTOCOLS</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-0 reveal-up" style="transition-delay: 0.2s;">
+                    
+                    <!-- Pillar 1 -->
+                    <div class="expertise-card p-6 md:p-10 hover-target">
+                        <div class="text-acid mb-6">
+                            <i data-lucide="scan-line" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Art & Culture</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Mendeteksi pergeseran narasi kultural. Kurasi estetika digital tingkat tinggi dan membedah nilai intrinsik di balik komunitas *on-chain*.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="expertise-card p-6 md:p-10 hover-target">
+                        <div class="text-acid mb-6">
+                            <i data-lucide="bar-chart-2" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Market Trading</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Menerjemahkan psikologi massa ke dalam grafik. Analisis likuiditas, rotasi volume, dan eksekusi presisi berbasis data kuantitatif.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="expertise-card p-6 md:p-10 hover-target">
+                        <div class="text-acid mb-6">
+                            <i data-lucide="network" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Deep Research</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Kontributor Web3 *native*. Membedah *tokenomics*, arsitektur protokol, dan menyusun tesis investasi yang kebal terhadap *hype*.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: PROOF OF WORK -->
+        <section class="slide" id="slide-3">
+            <div class="w-full max-w-6xl mx-auto flex flex-col justify-center h-full">
+                <h2 class="font-display text-3xl md:text-5xl font-bold mb-12 text-white reveal-up uppercase"><span class="text-acid">/</span>/ PROOF OF WORK</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 reveal-up" style="transition-delay: 0.2s;">
+                    
+                    <!-- Group 1: Leadership & Trade -->
+                    <div class="space-y-8">
+                        <div class="border-t border-gray-800 pt-4 hover-target group">
+                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="CO-FOUNDER">CO-FOUNDER</h3>
+                            <ul class="text-gray-400 font-mono text-sm space-y-2">
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> CryptoPride</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t border-gray-800 pt-4 hover-target group">
+                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="TRADE">TRADE</h3>
+                            <ul class="text-gray-400 font-mono text-sm space-y-2">
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> XAU</li>
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> BTC</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Group 2: OG & Artist -->
+                    <div class="space-y-8">
+                        <div class="border-t border-gray-800 pt-4 hover-target group">
+                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="OG_STATUS">OG_STATUS</h3>
+                            <ul class="text-gray-400 font-mono text-sm space-y-2">
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Openverse</li>
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Deepsafe</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="border-t border-gray-800 pt-4 hover-target group">
+                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="ARTIST">ARTIST</h3>
+                            <ul class="text-gray-400 font-mono text-sm space-y-2">
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Endless</li>
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Portaldot</li>
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> AIX ledger</li>
+                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Deepsafe</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Group 3: Research -->
+                    <div class="space-y-8">
+                        <div class="border-t border-gray-800 pt-4 hover-target group h-full">
+                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="RESEARCH">RESEAR
