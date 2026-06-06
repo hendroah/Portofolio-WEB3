@@ -1,30 +1,28 @@
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HEND | Web3 Narrative Architect</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB3 // OS_PORTFOLIO</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                        display: ['"Syncopate"', 'sans-serif'],
-                    },
                     colors: {
-                        bg: '#030303',
-                        acid: '#D4FF00', // Web3/Trading highly visible accent
-                        surface: '#111111'
+                        cyber: {
+                            red: '#ff2a4b',
+                            cyan: '#08f7fe',
+                            dark: '#050505',
+                            panel: 'rgba(5, 5, 5, 0.7)',
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['Space Mono', 'monospace'],
+                        display: ['Orbitron', 'sans-serif'],
                     }
                 }
             }
@@ -37,60 +35,125 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Hide default scrollbars entirely */
-            background-color: #030303;
-            color: #ffffff;
-            cursor: none; /* Hide default cursor */
+            background-color: #050505;
+            color: #fff;
+            overflow: hidden;
+            font-family: 'Space Mono', monospace;
         }
 
-        /* Custom Cursor */
-        #custom-cursor {
+        /* CRT Scanline Effect */
+        .scanlines {
             position: fixed;
             top: 0;
             left: 0;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #D4FF00;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-            mix-blend-mode: difference;
-        }
-        #custom-cursor.hovering {
-            width: 60px;
-            height: 60px;
-            background-color: rgba(212, 255, 0, 0.2);
-            border-color: transparent;
-        }
-
-        /* Horizontal Slider Container - Transform Method for All Devices */
-        #slider-container {
-            display: flex;
-            width: 600vw;
-            height: 100dvh; /* Mengikuti tinggi viewport aktual device */
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-            will-change: transform;
-        }
-
-        .slide {
             width: 100vw;
-            height: 100dvh;
-            position: relative;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6rem 1.5rem 6rem 1.5rem; /* Ruang agar tidak tertutup header/footer */
-            box-sizing: border-box;
-            overflow-y: auto; /* Bisa di-scroll ke bawah jika konten terlalu panjang di HP */
-            overflow-x: hidden;
-            touch-action: pan-y; /* Penting: izinkan scroll atas-bawah, swipe kiri-kanan ditangani JS */
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
         }
-        .slide::-webkit-scrollbar { display: none; } /* Sembunyikan scrollbar di dalam slide */
 
-        /* Abstract Background Canvas */
+        /* Screen Flicker & Vignette */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+            z-index: 49;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+
+        /* Glitch Text Effect */
+        .glitch {
+            position: relative;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff2a4b;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #08f7fe;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(13px, 9999px, 83px, 0); }
+            20% { clip: rect(65px, 9999px, 11px, 0); }
+            40% { clip: rect(43px, 9999px, 5px, 0); }
+            60% { clip: rect(88px, 9999px, 64px, 0); }
+            80% { clip: rect(12px, 9999px, 32px, 0); }
+            100% { clip: rect(54px, 9999px, 96px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(3px, 9999px, 54px, 0); }
+            40% { clip: rect(86px, 9999px, 12px, 0); }
+            60% { clip: rect(24px, 9999px, 78px, 0); }
+            80% { clip: rect(98px, 9999px, 45px, 0); }
+            100% { clip: rect(15px, 9999px, 33px, 0); }
+        }
+
+        /* Neon Borders & Glows */
+        .neon-border {
+            border: 1px solid rgba(255, 42, 75, 0.3);
+            box-shadow: 0 0 10px rgba(255, 42, 75, 0.1), inset 0 0 10px rgba(255, 42, 75, 0.1);
+            backdrop-filter: blur(4px);
+        }
+        .neon-border-cyan {
+            border: 1px solid rgba(8, 247, 254, 0.3);
+            box-shadow: 0 0 10px rgba(8, 247, 254, 0.1), inset 0 0 10px rgba(8, 247, 254, 0.1);
+            backdrop-filter: blur(4px);
+        }
+        .neon-text-red {
+            text-shadow: 0 0 5px rgba(255, 42, 75, 0.8), 0 0 15px rgba(255, 42, 75, 0.5);
+        }
+        .neon-text-cyan {
+            text-shadow: 0 0 5px rgba(8, 247, 254, 0.8), 0 0 15px rgba(8, 247, 254, 0.5);
+        }
+
+        /* Custom Scrollbar for inner content */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff2a4b;
+        }
+
+        /* Canvas Background */
         #bg-canvas {
             position: fixed;
             top: 0;
@@ -98,292 +161,219 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.3;
+            opacity: 0.6;
         }
 
-        /* Navigation Dots */
-        .nav-dot {
+        /* Nav Link Hover */
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-link::before {
+            content: '>';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            color: #ff2a4b;
             transition: all 0.3s ease;
         }
-        .nav-dot.active {
-            height: 2rem;
-            background-color: #D4FF00;
-        }
-
-        /* Staggered Reveal Animations */
-        .reveal-up {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        .slide.active .reveal-up {
+        .nav-link:hover::before, .nav-link.active::before {
             opacity: 1;
-            transform: translateY(0);
+            left: -20px;
+        }
+        .nav-link.active {
+            color: #ff2a4b;
+            text-shadow: 0 0 8px rgba(255, 42, 75, 0.6);
         }
 
-        /* Glitch effect for main title */
-        .glitch-wrapper {
-            position: relative;
+        /* Window Content Animation */
+        .window-content {
+            display: none;
+            animation: bootUp 0.4s ease-out forwards;
         }
-        .glitch-text {
-            position: relative;
-            z-index: 2;
-        }
-        .glitch-text::before, .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #030303;
-        }
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -2px 0 red;
-            clip: rect(24px, 550px, 90px, 0);
-            animation: glitch-anim 3s infinite linear alternate-reverse;
-            z-index: -1;
-        }
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -2px 0 #D4FF00;
-            clip: rect(85px, 550px, 140px, 0);
-            animation: glitch-anim 2.5s infinite linear alternate-reverse;
-            z-index: -2;
+        .window-content.active {
+            display: block;
         }
 
-        @keyframes glitch-anim {
-            0% { clip: rect(10px, 9999px, 83px, 0); }
-            20% { clip: rect(72px, 9999px, 14px, 0); }
-            40% { clip: rect(44px, 9999px, 98px, 0); }
-            60% { clip: rect(2px, 9999px, 32px, 0); }
-            80% { clip: rect(89px, 9999px, 65px, 0); }
-            100% { clip: rect(34px, 9999px, 12px, 0); }
+        @keyframes bootUp {
+            0% { transform: scaleY(0.01) scaleX(0); opacity: 0; }
+            50% { transform: scaleY(0.01) scaleX(1); opacity: 1; }
+            100% { transform: scaleY(1) scaleX(1); opacity: 1; }
         }
 
-        /* Section Specific Styles */
-        .expertise-card {
-            border-left: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.4s ease;
-        }
-        .expertise-card:hover {
-            border-left-color: #D4FF00;
-            background: linear-gradient(90deg, rgba(212,255,0,0.05) 0%, transparent 100%);
-            padding-left: 1.5rem;
-        }
-
-        /* Profile Image Animation */
-        @keyframes dim-bright {
-            0%, 100% { filter: brightness(1); opacity: 1; }
-            50% { filter: brightness(0.2); opacity: 0.7; }
-        }
-        .animate-dim-bright {
-            animation: dim-bright 3.5s infinite ease-in-out;
-            transition: filter 0.5s ease, opacity 0.5s ease;
-        }
-        .group:hover .animate-dim-bright {
-            animation: none;
-            filter: brightness(1.1);
-            opacity: 1;
-        }
-
-        /* Custom Scrollbar for Modal */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #D4FF00; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            #custom-cursor { display: none; }
-            body, html { cursor: auto; }
-            .slide { align-items: flex-start; padding-top: 20vh; }
+        .image-placeholder {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 42, 75, 0.1),
+                rgba(255, 42, 75, 0.1) 10px,
+                rgba(0, 0, 0, 0) 10px,
+                rgba(0, 0, 0, 0) 20px
+            );
+            border: 1px solid rgba(255, 42, 75, 0.3);
         }
     </style>
 </head>
-<body class="font-mono bg-bg text-white overflow-hidden selection:bg-acid selection:text-black">
+<body class="text-xs sm:text-sm">
 
-    <!-- Custom Cursor -->
-    <div id="custom-cursor" class="hidden md:block"></div>
-
-    <!-- Background Canvas -->
+    <!-- Effects Overlays -->
     <canvas id="bg-canvas"></canvas>
+    <div class="scanlines"></div>
+    <div class="crt-overlay"></div>
 
-    <!-- Fixed Header -->
-    <header class="fixed top-0 left-0 w-full p-6 md:p-8 z-50 flex justify-between items-center pointer-events-none">
-        <div class="font-display font-bold text-xl tracking-widest text-acid pointer-events-auto hover-target cursor-pointer">
-            HEND
-        </div>
-    </header>
-
-    <!-- Fixed Progress Indicator -->
-    <div class="fixed bottom-8 left-8 z-50 flex gap-3 pointer-events-auto">
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full active" data-index="0"></button>
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="1"></button>
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="2"></button>
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="3"></button>
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="4"></button>
-        <button class="nav-dot w-1 h-8 bg-gray-800 rounded-full" data-index="5"></button>
-    </div>
-
-    <!-- Scroll Hint -->
-    <div class="fixed bottom-8 right-8 z-50 flex items-center gap-4 text-xs tracking-widest text-gray-500 font-mono">
-        <span class="hidden md:inline">SCROLL TO NAVIGATE</span>
-        <span class="md:hidden">SWIPE TO NAVIGATE</span>
-        <i data-lucide="arrow-right" class="w-4 h-4 animate-pulse text-acid"></i>
-    </div>
-
-    <!-- Main Horizontal Slider -->
-    <main id="slider-container">
+    <!-- Main Interface Container -->
+    <div class="relative z-10 flex flex-col h-screen w-full p-2 sm:p-6">
         
-        <!-- SLIDE 1: INTRO -->
-        <section class="slide active" id="slide-0">
-            <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-                <div class="md:w-1/2 flex flex-col justify-center">
-                    <div class="reveal-up" style="transition-delay: 0.1s;">
-                        <p class="text-acid text-sm md:text-base tracking-[0.3em] mb-4 uppercase scramble" data-text="SYSTEM ARCHITECTURE // WEB3">INITIALIZING...</p>
-                    </div>
-                    
-                    <div class="glitch-wrapper reveal-up" style="transition-delay: 0.2s;">
-                        <h1 class="glitch-text font-display text-[15vw] md:text-[8vw] leading-none font-bold tracking-tighter" data-text="HEND">HEND</h1>
-                    </div>
-                    
-                    <div class="reveal-up mt-8 max-w-xl" style="transition-delay: 0.4s;">
-                        <p class="text-xl md:text-3xl font-light text-gray-400 scramble" data-text="The Narrative Architect.">Loading core identity...</p>
-                        <p class="mt-4 text-sm md:text-base text-gray-500 leading-relaxed scramble" data-text="Decoding the intersection of Digital Art, Market Liquidity, and Deep Research.">Syncing data streams...</p>
-                    </div>
-                </div>
-
-                <div class="md:w-1/2 flex justify-center md:justify-end reveal-up mt-10 md:mt-0" style="transition-delay: 0.6s;">
-                    <!-- Profil Image Responsive (Mengecil di HP, membesar di Tablet/PC) -->
-                    <div class="relative w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 group hover-target rounded-full p-2 border border-gray-800 hover:border-acid transition-colors duration-500 shadow-[0_0_0_rgba(212,255,0,0)] hover:shadow-[0_0_30px_rgba(212,255,0,0.15)] mx-auto md:mx-0">
-                        
-                        <div class="w-full h-full bg-surface overflow-hidden relative rounded-full">
-                            <div class="absolute inset-0 bg-acid/10 mix-blend-overlay z-10 group-hover:bg-transparent transition-colors duration-700"></div>
-                            <!-- Foto Profil GitHub Raw (Warna Asli) -->
-                            <img src="https://raw.githubusercontent.com/hendroah/Portofolio-WEB3/4ce1d8b3d776ed9a9261d5040f8cfee4780e09fc/IMG-20260602-WA0080.jpg" alt="Hend Profile" class="w-full h-full object-cover transition-all duration-700 transform group-hover:scale-105 animate-dim-bright" onerror="this.src='https://github.com/hendroah.png';">
-                        </div>
-                        
-                        <!-- Badge ID dipindah sedikit agar pas dengan bentuk lingkaran -->
-                        <div class="absolute bottom-2 right-2 md:bottom-6 md:right-0 bg-bg px-3 py-1 text-xs font-mono text-acid border border-gray-800 z-20 shadow-[4px_4px_0px_0px_rgba(212,255,0,0.2)] group-hover:-translate-y-1 transition-transform duration-300">
-                            ID: HEND_
-                        </div>
-                    </div>
+        <!-- Top HUD Bar -->
+        <header class="flex justify-between items-center w-full mb-6 neon-border bg-cyber-panel p-3">
+            <div class="flex items-center gap-4">
+                <h1 class="font-display font-bold text-xl sm:text-2xl tracking-widest text-white glitch" data-text="0xPORTFOLIO">0xPORTFOLIO</h1>
+                <span class="hidden sm:inline-block text-[10px] text-cyber-red border border-cyber-red px-2 py-1 uppercase animate-pulse">Pride</span>
+            </div>
+            
+            <!-- Connection Status -->
+            <div class="flex items-center gap-4 text-[10px] sm:text-xs text-cyber-cyan opacity-80">
+                <span class="hidden md:inline">Connected: Web3 Provider</span>
+                <span>Ping: <span id="ping">12</span>ms</span>
+                <div class="flex items-end gap-1 h-3">
+                    <div class="w-1 bg-cyber-cyan h-1"></div>
+                    <div class="w-1 bg-cyber-cyan h-2"></div>
+                    <div class="w-1 bg-cyber-cyan h-3"></div>
+                    <div class="w-1 bg-cyber-cyan h-2"></div>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <!-- SLIDE 2: THE THESIS -->
-        <section class="slide" id="slide-1">
-            <div class="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-center">
-                <div class="md:w-1/2 reveal-up">
-                    <h2 class="font-display text-4xl md:text-6xl font-bold mb-6 text-white uppercase"><span class="text-acid">/</span>/ Thesis</h2>
-                    <div class="h-[1px] w-full bg-gray-800 mb-8 relative">
-                        <div class="absolute top-0 left-0 h-full bg-acid w-0 transition-all duration-1000 ease-out" id="thesis-line"></div>
-                    </div>
-                    <p class="text-lg md:text-2xl text-gray-300 leading-relaxed font-light mb-6">
-                        "Estetika tanpa likuiditas adalah arsip mati. Likuiditas tanpa narasi budaya hanyalah kasino sementara."
-                    </p>
-                    <p class="text-sm text-gray-500 leading-relaxed font-mono">
-                        Kebanyakan orang di Web3 terjebak pada satu sisi. Saya berdiri di tengah. Menganalisis pasar melalui lensa budaya seni, dan membedah karya seni melalui metrik volume perdagangan.
-                    </p>
-                </div>
-                <div class="md:w-1/2 flex justify-center reveal-up" style="transition-delay: 0.2s;">
-                    <!-- Abstract geometric element -->
-                    <div class="w-64 h-64 md:w-96 md:h-96 border border-gray-800 relative flex items-center justify-center p-8 group hover-target">
-                        <div class="absolute inset-0 bg-acid opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-                        <div class="w-full h-full border border-acid/30 rotate-45 transition-transform duration-700 group-hover:rotate-90"></div>
-                        <div class="absolute w-1/2 h-1/2 border border-white/20 -rotate-12 transition-transform duration-700 group-hover:rotate-0"></div>
-                        <div class="absolute font-display font-bold text-acid text-xl tracking-widest text-center uppercase scramble" data-text="Proof of Work">???</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SLIDE 3: EXPERTISE -->
-        <section class="slide" id="slide-2">
-            <div class="w-full max-w-7xl mx-auto flex flex-col justify-center h-full">
-                <h2 class="font-display text-3xl md:text-5xl font-bold mb-12 text-white reveal-up uppercase"><span class="text-acid">/</span>/ CORE PROTOCOLS</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-0 reveal-up" style="transition-delay: 0.2s;">
+        <!-- Main Layout Flex -->
+        <div class="flex flex-1 gap-6 overflow-hidden flex-col md:flex-row">
+            
+            <!-- Left Sidebar (Navigation & Identity) -->
+            <aside class="w-full md:w-64 flex flex-col gap-6 shrink-0">
+                <!-- Profile Block -->
+                <div class="neon-border bg-cyber-panel p-4 relative">
+                    <div class="absolute top-0 right-0 p-1 text-[8px] text-cyber-red border-b border-l border-cyber-red">ID: 9948</div>
                     
-                    <!-- Pillar 1 -->
-                    <div class="expertise-card p-6 md:p-10 hover-target">
-                        <div class="text-acid mb-6">
-                            <i data-lucide="scan-line" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Art & Culture</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            Mendeteksi pergeseran narasi kultural. Kurasi estetika digital tingkat tinggi dan membedah nilai intrinsik di balik komunitas *on-chain*.
-                        </p>
+                    <!-- Updated Image Box -->
+                    <div class="w-20 h-20 mb-4 rounded-full border-2 border-cyber-cyan mx-auto overflow-hidden shadow-[0_0_15px_rgba(8,247,254,0.3)] bg-cyber-dark">
+                        <!-- Menggunakan raw link github agar bisa ditampilkan sebagai gambar -->
+                        <img src="https://raw.githubusercontent.com/hendroah/Portofolio-WEB3/4ce1d8b3d776ed9a9261d5040f8cfee4780e09fc/IMG-20260602-WA0080.jpg" alt="Hend Profile" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/050505/08f7fe?text=Hend';">
                     </div>
 
-                    <!-- Pillar 2 -->
-                    <div class="expertise-card p-6 md:p-10 hover-target">
-                        <div class="text-acid mb-6">
-                            <i data-lucide="bar-chart-2" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Market Trading</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            Menerjemahkan psikologi massa ke dalam grafik. Analisis likuiditas, rotasi volume, dan eksekusi presisi berbasis data kuantitatif.
-                        </p>
-                    </div>
-
-                    <!-- Pillar 3 -->
-                    <div class="expertise-card p-6 md:p-10 hover-target">
-                        <div class="text-acid mb-6">
-                            <i data-lucide="network" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4 uppercase">Deep Research</h3>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            Kontributor Web3 *native*. Membedah *tokenomics*, arsitektur protokol, dan menyusun tesis investasi yang kebal terhadap *hype*.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- SLIDE 4: PROOF OF WORK -->
-        <section class="slide" id="slide-3">
-            <div class="w-full max-w-6xl mx-auto flex flex-col justify-center h-full">
-                <h2 class="font-display text-3xl md:text-5xl font-bold mb-12 text-white reveal-up uppercase"><span class="text-acid">/</span>/ PROOF OF WORK</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 reveal-up" style="transition-delay: 0.2s;">
+                    <h2 class="text-center font-display text-cyber-red font-bold tracking-wider mb-1">Hend</h2>
+                    <p class="text-center text-[10px] text-gray-400 mb-4">Web3 Builder & Digital Artist</p>
                     
-                    <!-- Group 1: Leadership & Trade -->
-                    <div class="space-y-8">
-                        <div class="border-t border-gray-800 pt-4 hover-target group">
-                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="CO-FOUNDER">CO-FOUNDER</h3>
-                            <ul class="text-gray-400 font-mono text-sm space-y-2">
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> CryptoPride</li>
-                            </ul>
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 gap-2 text-[10px] border-t border-gray-800 pt-3">
+                        <div>
+                            <div class="text-gray-500">LEVEL</div>
+                            <div class="text-cyber-cyan">?</div>
                         </div>
-                        
-                        <div class="border-t border-gray-800 pt-4 hover-target group">
-                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="TRADE">TRADE</h3>
-                            <ul class="text-gray-400 font-mono text-sm space-y-2">
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> XAU</li>
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> BTC</li>
-                            </ul>
+                        <div>
+                            <div class="text-gray-500">CLASS</div>
+                            <div class="text-cyber-cyan">Artist</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="neon-border bg-cyber-panel p-4 flex-1 flex flex-col">
+                    <div class="text-[10px] text-gray-500 mb-4 border-b border-gray-800 pb-1">/// DIRECTORY_ACCESS</div>
+                    <ul class="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible pb-2 md:pb-0" id="nav-menu">
+                        <li><button type="button" class="nav-link active uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="home"><i class="fa-solid fa-terminal mr-2"></i>Terminal</button></li>
+                        <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="art"><i class="fa-solid fa-palette mr-2"></i>Art</button></li>
+                        <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="research"><i class="fa-solid fa-microscope mr-2"></i>Research</button></li>
+                        <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="web3"><i class="fa-brands fa-hive mr-2"></i>Web3</button></li>
+                        <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="trading"><i class="fa-solid fa-chart-line mr-2"></i>Trading</button></li>
+                        <li><button type="button" class="nav-link uppercase tracking-wider hover:text-cyber-red focus:outline-none whitespace-nowrap" data-target="album"><i class="fa-solid fa-images mr-2"></i>Album</button></li>
+                        <li class="md:mt-auto pt-4 md:border-t md:border-gray-800"><button type="button" class="nav-link uppercase tracking-wider text-cyber-cyan hover:text-white focus:outline-none whitespace-nowrap" data-target="contact"><i class="fa-solid fa-satellite-dish mr-2"></i>Contact</button></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 neon-border bg-cyber-panel p-1 relative overflow-hidden flex flex-col">
+                <!-- Decorative top bar for content window -->
+                <div class="h-6 border-b border-gray-800 flex items-center px-2 justify-between bg-black bg-opacity-50">
+                    <div class="flex gap-1">
+                        <div class="w-2 h-2 rounded-full bg-cyber-red opacity-50"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500 opacity-50"></div>
+                        <div class="w-2 h-2 rounded-full bg-green-500 opacity-50"></div>
+                    </div>
+                    <div class="text-[10px] text-gray-500" id="window-title">@Hendroabdh</div>
+                </div>
+
+                <!-- Content Wrapper (Scrollable) -->
+                <div class="p-4 sm:p-8 overflow-y-auto h-full flex-1 relative">
+                    
+                    <!-- 1. HOME / TERMINAL -->
+                    <div id="home" class="window-content active">
+                        <div class="font-mono text-sm sm:text-base leading-relaxed">
+                            <p class="text-cyber-cyan mb-2">> System initialize...</p>
+                            <p class="text-green-500 mb-2">> Loading sub-modules [OK]</p>
+                            <p class="text-green-500 mb-6">> Decrypting user data... [OK]</p>
+                            
+                            <h2 class="text-3xl sm:text-5xl font-display font-bold text-white mb-4 uppercase glitch" data-text="Welcome">Welcome</h2>
+                            <p class="text-gray-400 max-w-2xl mb-6">
+                                I am a digital explorer at the intersection of art, decentralization, and markets. Building and hacking the Web3 space, analyzing on-chain data, and creating new visual realities.
+                            </p>
+                            
+                            <div class="inline-block border border-cyber-red p-4 bg-cyber-dark relative">
+                                <div class="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-cyber-red"></div>
+                                <div class="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-cyber-red"></div>
+                                <p class="text-cyber-red font-bold tracking-widest uppercase mb-1">Current Mission:</p>
+                                <p class="text-sm">Gathering Web3 beginners, artists, content creators, NFT warriors, and others to grow and collaborate in the decentralized ecosystem.</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Group 2: OG & Artist -->
-                    <div class="space-y-8">
-                        <div class="border-t border-gray-800 pt-4 hover-target group">
-                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="OG_STATUS">OG_STATUS</h3>
-                            <ul class="text-gray-400 font-mono text-sm space-y-2">
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Openverse</li>
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Deepsafe</li>
-                            </ul>
+                    <!-- 2. ART -->
+                    <div id="art" class="window-content">
+                        <h2 class="text-2xl font-display text-cyber-cyan mb-6 flex items-center border-b border-gray-800 pb-2">
+                            <i class="fa-solid fa-palette mr-3"></i> DIGITAL_ART_GALLERY
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <a href="https://github.com/hendroah" target="_blank" class="group relative overflow-hidden neon-border cursor-pointer block">
+                                <div class="h-48 image-placeholder flex flex-col justify-center items-center text-cyber-red opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <i class="fa-solid fa-vr-cardboard text-4xl mb-2"></i>
+                                    <span class="text-xs uppercase">Rendering_01.obj</span>
+                                </div>
+                                <div class="p-3 bg-cyber-dark border-t border-gray-800 absolute bottom-0 w-full transform translate-y-full group-hover:translate-y-0 transition-transform">
+                                    <h3 class="text-cyber-cyan font-bold text-sm">Cyber Cityscape</h3>
+                                    <p class="text-[10px] text-gray-400">Blender3D / Octane</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/hendroah" target="_blank" class="group relative overflow-hidden neon-border cursor-pointer block">
+                                <div class="h-48 image-placeholder flex flex-col justify-center items-center text-cyber-red opacity-60 group-hover:opacity-100 transition-opacity" style="border-color: #08f7fe; background-image: repeating-linear-gradient(45deg, rgba(8, 247, 254, 0.1), rgba(8, 247, 254, 0.1) 10px, rgba(0, 0, 0, 0) 10px, rgba(0, 0, 0, 0) 20px);">
+                                    <i class="fa-solid fa-cube text-4xl mb-2 text-cyber-cyan"></i>
+                                    <span class="text-xs uppercase text-cyber-cyan">Abstract_Node.png</span>
+                                </div>
+                                <div class="p-3 bg-cyber-dark border-t border-gray-800 absolute bottom-0 w-full transform translate-y-full group-hover:translate-y-0 transition-transform">
+                                    <h3 class="text-cyber-cyan font-bold text-sm">On-Chain Entity</h3>
+                                    <p class="text-[10px] text-gray-400">Generative AI + TouchDesigner</p>
+                                </div>
+                            </a>
+                            <a href="https://github.com/hendroah" target="_blank" class="group relative overflow-hidden neon-border cursor-pointer block">
+                                <div class="h-48 image-placeholder flex flex-col justify-center items-center text-cyber-red opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <i class="fa-brands fa-ethereum text-4xl mb-2"></i>
+                                    <span class="text-xs uppercase">NFT_Collection.zip</span>
+                                </div>
+                                <div class="p-3 bg-cyber-dark border-t border-gray-800 absolute bottom-0 w-full transform translate-y-full group-hover:translate-y-0 transition-transform">
+                                    <h3 class="text-cyber-cyan font-bold text-sm">Glitch Protocol</h3>
+                                    <p class="text-[10px] text-gray-400">ERC-721 Collection</p>
+                                </div>
+                            </a>
                         </div>
-                        
-                        <div class="border-t border-gray-800 pt-4 hover-target group">
-                            <h3 class="font-display text-xl text-acid font-bold mb-3 uppercase scramble" data-text="ARTIST">ARTIST</h3>
-                            <ul class="text-gray-400 font-mono text-sm space-y-2">
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Endless</li>
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> Portaldot</li>
-                                <li class="flex items-center gap-2"><span class="text-acid opacity-0 group-hover:opacity-100 transition-opacity">>></span> AIX ledger</li>
-                                <li
+                    </div>
+
+                    <!-- 3. RESEARCH -->
+                    <div id="research" class="window-content">
+                        <h2 class="text-2xl font-display text-cyber-cyan mb-6 flex items-center border-b border-gray-800 pb-2">
+                            <i class="fa-solid fa-microscope mr-3"></i> ONCHAIN_RESEARCH_ARCHIVE
+                        </h2>
+                        <div class="flex flex-col gap-4">
+                            <div class="border-l-2 border-cyber-cyan bg-cyber-dark p-4 hover:bg-gray-900 transition-colors">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-white font-bold text-lg">Research Content #1</h3>
+                                    <span class="text-[10px] border border-gray-700 px-2 py-1 text-gray-400">2026.06.06</span>
+                                </div>
+                                <p class="text-sm text-gray-400 mb-3">This is a placeholder for your research content. Please replace it with your research details, case studies, or on-chain analysis.</p>
+                                <a href="https://github.com/hendroah" target="_blank" class="text-cyber-cyan text-xs hover:te
